@@ -22,12 +22,12 @@
 mod acquire;
 pub mod arguments;
 mod close;
-mod describe;
 mod column;
 mod connect;
 mod connection;
 pub mod database;
 pub mod decode;
+mod describe;
 pub mod encode;
 mod error;
 mod execute;
@@ -49,6 +49,9 @@ pub mod io;
 pub mod net;
 
 #[doc(hidden)]
+pub mod placeholders;
+
+#[doc(hidden)]
 #[cfg(feature = "_mock")]
 pub mod mock;
 
@@ -65,6 +68,7 @@ pub use connect::Connect;
 pub use connection::Connection;
 pub use database::Database;
 pub use decode::Decode;
+pub use describe::Describe;
 pub use encode::Encode;
 pub use error::{DatabaseError, Error, Result};
 pub use execute::Execute;
@@ -86,4 +90,3 @@ pub use runtime::Runtime;
 #[cfg(feature = "tokio")]
 pub use runtime::Tokio;
 pub use type_info::TypeInfo;
-pub use describe::Describe;
