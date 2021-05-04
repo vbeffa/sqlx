@@ -137,7 +137,7 @@ macro_rules! blocking {
 
 #[cfg(all(
     feature = "_rt-async-std",
-    not(any(feature = "_rt-actix", feature = "_rt-tokio")),
+    not(any(feature = "_rt-actix", feature = "_rt-tokio", feature = "_rt-wasm-bindgen")),
 ))]
 pub use async_std::{
     self, fs, future::timeout, io::prelude::ReadExt as AsyncReadExt,
