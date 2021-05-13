@@ -55,7 +55,7 @@ impl Socket {
     }
 
     pub async fn shutdown(&mut self) -> io::Result<()> {
-        #[cfg(feature = "_rt-async-std")]
+        #[cfg(all(feature = "_rt-async-std", not(feature = "_rt-wasm-bindgen")))]
         {
             use std::net::Shutdown;
 
@@ -153,7 +153,7 @@ impl AsyncWrite for Socket {
         }
     }
 
-    #[cfg(feature = "_rt-async-std")]
+    #[cfg(all(feature = "_rt-async-std", not(feature = "_rt-wasm-bindgen")))]
     fn poll_close(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<io::Result<()>> {
         match &mut *self {
            Socket::Tcp(s) => Pin::new(s).poll_close(cx),
