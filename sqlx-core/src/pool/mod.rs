@@ -54,43 +54,43 @@
 //! [`Pool::acquire`] or
 //! [`Pool::begin`].
 
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 use self::inner::SharedPool;
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 use crate::connection::Connection;
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 use crate::database::Database;
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 use crate::error::Error;
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 use crate::transaction::Transaction;
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 use std::fmt;
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 use std::future::Future;
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 use std::sync::Arc;
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 use std::time::{Duration, Instant};
 
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 #[macro_use]
 mod executor;
 
 #[macro_use]
 mod maybe;
 
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 mod connection;
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 mod inner;
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 mod options;
 
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 pub use self::connection::PoolConnection;
 pub(crate) use self::maybe::MaybePoolConnection;
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 pub use self::options::PoolOptions;
 
 /// An asynchronous pool of SQLx database connections.
@@ -229,10 +229,10 @@ pub use self::options::PoolOptions;
 /// Depending on the database server, a connection will have caches for all kinds of other data as
 /// well and queries will generally benefit from these caches being "warm" (populated with data).
 
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 pub struct Pool<DB: Database>(pub(crate) Arc<SharedPool<DB>>);
 
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 impl<DB: Database> Pool<DB> {
     /// Creates a new connection pool with a default pool configuration and
     /// the given connection URI; and, immediately establishes one connection.
@@ -323,14 +323,14 @@ impl<DB: Database> Pool<DB> {
 }
 
 /// Returns a new [Pool] tied to the same shared connection pool.
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 impl<DB: Database> Clone for Pool<DB> {
     fn clone(&self) -> Self {
         Self(Arc::clone(&self.0))
     }
 }
 
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 impl<DB: Database> fmt::Debug for Pool<DB> {
     fn fmt(&self, fmt: &mut fmt::Formatter<'_>) -> fmt::Result {
         fmt.debug_struct("Pool")
@@ -345,7 +345,7 @@ impl<DB: Database> fmt::Debug for Pool<DB> {
 /// get the time between the deadline and now and use that as our timeout
 ///
 /// returns `Error::PoolTimedOut` if the deadline is in the past
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 fn deadline_as_timeout<DB: Database>(deadline: Instant) -> Result<Duration, Error> {
     deadline
         .checked_duration_since(Instant::now())

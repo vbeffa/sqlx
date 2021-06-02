@@ -221,3 +221,125 @@ macro_rules! Postgres_query_for_test_prepared_type {
         "SELECT ({0} is not distinct from $1)::int4, {0}, $2"
     };
 }
+
+#[macro_export]
+macro_rules! time_delete_query {
+    ($n:expr, $count:literal) => {
+        let mut conn = new::<Postgres>().await.unwrap();
+
+        conn.execute("create temp table bench_deletes (id integer, descr text, primary key(id))")
+            .await;
+
+        conn.execute("create bitmap index id_idx on bench_deletes (id)")
+            .await;
+
+        let _ = sqlx::query(&format!(
+            "insert into bench_deletes (id, descr) select generate_series(1,{}) AS id, md5(random()::text) AS descr",
+            $count
+        ))
+
+        .execute(&mut conn)
+        .await;
+
+        let start = Instant::now();
+        for _ in 0..3u8 {
+            for i in 1..$count {
+                let _ = sqlx::query(&format!(
+                    "delete from bench_deletes where id = {}",
+                    i
+                ))
+                .execute(&mut conn)
+                .await;
+            }
+        }
+
+        let end = Instant::now();
+
+        println!("{}: Avg time is {}", $n, end.duration_since(start).as_millis() / 3u128);
+    };
+}
+
+#[macro_export]
+macro_rules! time_update_query {
+    ($n:expr, $count:literal) => {
+        let mut conn = new::<Postgres>().await.unwrap();
+
+        conn.execute("create temp table bench_updates (id integer, descr text, primary key(id))")
+            .await;
+
+        conn.execute("create bitmap index id_idx on bench_updates (id)")
+            .await;
+
+        let _ = sqlx::query(&format!(
+            "insert into bench_updates (id, descr) select generate_series(1,{}) AS id, md5(random()::text) AS descr",
+            $count
+        ))
+        .execute(&mut conn)
+        .await;
+
+        let start = Instant::now();
+        for _ in 0..3u8 {
+            for i in 1..$count {
+                let _ = sqlx::query(&format!(
+                    "update bench_updates set descr = md5(random()::text) where id = {}",
+                    i
+                ))
+                .execute(&mut conn)
+                .await;
+            }
+        }
+
+        let end = Instant::now();
+        println!("{}: Avg time is {}", $n, end.duration_since(start).as_millis() / 3u128);
+    };
+}
+
+#[macro_export]
+macro_rules! time_insert_query {
+    ($n:expr, $count:literal) => {
+        let mut conn = new::<Postgres>().await.unwrap();
+        conn.execute("create temp table bench_inserts (id integer, descr text)")
+            .await;
+
+        let start = Instant::now();
+
+        for _ in 0..3u8 {
+            for i in 0..$count {
+                let _ = sqlx::query(&format!(
+                    "insert into bench_inserts (id, desc) values ({}, md5(random()::text))",
+                    i
+                ))
+                .execute(&mut conn)
+                .await;
+            }
+        }
+
+        let end = Instant::now();
+        println!(
+            "{}: Avg time is {}",
+            $n,
+            end.duration_since(start).as_millis() / 3u128
+        );
+    };
+}
+
+#[macro_export]
+macro_rules! time_query {
+    ($n:expr, $q:expr) => {
+        let mut conn = new::<Postgres>().await.unwrap();
+
+        let start = Instant::now();
+
+        for _ in 0..3u8 {
+            let _ = sqlx::query($q).fetch_all(&mut conn).await;
+        }
+
+        let end = Instant::now();
+
+        println!(
+            "{}: Avg time is {}",
+            $n,
+            end.duration_since(start).as_millis() / 3u128
+        );
+    };
+}

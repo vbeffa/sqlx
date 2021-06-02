@@ -3,14 +3,14 @@ use crate::describe::Describe;
 use crate::error::Error;
 use either::Either;
 
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 use futures_core::future::BoxFuture;
-#[cfg(feature = "_rt-wasm-bindgen")]
+#[cfg(target_arch = "wasm32")]
 use futures_core::future::LocalBoxFuture as BoxFuture;
 
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 use futures_core::stream::BoxStream;
-#[cfg(feature = "_rt-wasm-bindgen")]
+#[cfg(target_arch = "wasm32")]
 use futures_core::stream::LocalBoxStream as BoxStream;
 
 use futures_util::{future, FutureExt, StreamExt, TryFutureExt, TryStreamExt};
@@ -31,7 +31,7 @@ use std::fmt::Debug;
 ///  * [`&mut PoolConnection`](super::pool::PoolConnection)
 ///  * [`&mut Connection`](super::connection::Connection)
 ///
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 pub trait Executor<'c>: Send + Debug + Sized {
     type Database: Database;
 
@@ -185,7 +185,7 @@ pub trait Executor<'c>: Send + Debug + Sized {
         'c: 'e;
 }
 
-#[cfg(feature = "_rt-wasm-bindgen")]
+#[cfg(target_arch = "wasm32")]
 pub trait Executor<'c>: Debug + Sized {
     type Database: Database;
 
@@ -346,7 +346,7 @@ pub trait Executor<'c>: Debug + Sized {
 ///  * [`&str`](std::str)
 ///  * [`Query`](super::query::Query)
 ///
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 pub trait Execute<'q, DB: Database>: Send + Sized {
     /// Gets the SQL that will be executed.
     fn sql(&self) -> &'q str;
@@ -365,7 +365,7 @@ pub trait Execute<'q, DB: Database>: Send + Sized {
     fn persistent(&self) -> bool;
 }
 
-#[cfg(feature = "_rt-wasm-bindgen")]
+#[cfg(target_arch = "wasm32")]
 pub trait Execute<'q, DB: Database>: Sized {
     /// Gets the SQL that will be executed.
     fn sql(&self) -> &'q str;

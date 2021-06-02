@@ -5,13 +5,7 @@ use crate::postgres::{PgConnection, PgQueryResult, PgRow, PgStatement, PgTypeInf
 use crate::{connection::Connection, error::Error};
 use either::Either;
 use futures_channel::mpsc;
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
-use futures_core::future::BoxFuture;
-#[cfg(feature = "_rt-wasm-bindgen")]
 use futures_core::future::LocalBoxFuture as BoxFuture;
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
-use futures_core::stream::BoxStream;
-#[cfg(feature = "_rt-wasm-bindgen")]
 use futures_core::stream::LocalBoxStream as BoxStream;
 use futures_core::stream::Stream;
 use std::fmt::{self, Debug};

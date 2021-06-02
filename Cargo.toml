@@ -5,6 +5,7 @@ members = [
     "sqlx-rt",
     "sqlx-macros",
     "sqlx-test",
+    "sqlx-wasm-test",
     "sqlx-cli",
     "sqlx-bench",
     "examples/mysql/todos",
@@ -17,7 +18,7 @@ members = [
 
 [package]
 name = "sqlx"
-version = "0.5.3"
+version = "0.5.5"
 license = "MIT OR Apache-2.0"
 readme = "README.md"
 repository = "https://github.com/launchbadge/sqlx"
@@ -103,17 +104,11 @@ runtime-tokio-rustls = [
     "sqlx-macros/runtime-tokio-rustls",
     "_rt-tokio",
 ]
-runtime-wasm-bindgen = [
-     "sqlx-core/runtime-wasm-bindgen",
-     "sqlx-macros/runtime-wasm-bindgen",
-     "_rt-wasm-bindgen",
- ]
- 
+
 # for conditional compilation
 _rt-actix = []
 _rt-async-std = []
 _rt-tokio = []
-_rt-wasm-bindgen = []
 
 # database
 any = ["sqlx-core/any"]
@@ -135,8 +130,8 @@ bstr = ["sqlx-core/bstr"]
 git2 = ["sqlx-core/git2"]
 
 [dependencies]
-sqlx-core = { version = "0.5.3", path = "sqlx-core", default-features = false }
-sqlx-macros = { version = "0.5.3", path = "sqlx-macros", default-features = false, optional = true }
+sqlx-core = { version = "0.5.5", path = "sqlx-core", default-features = false }
+sqlx-macros = { version = "0.5.5", path = "sqlx-macros", default-features = false, optional = true }
 
 [dev-dependencies]
 anyhow = "1.0.31"
@@ -258,6 +253,26 @@ required-features = ["postgres", "macros"]
 name = "postgres-derives"
 path = "tests/postgres/derives.rs"
 required-features = ["postgres", "macros"]
+
+[[test]]
+name = "pg-deletes-bench"
+path = "tests/postgres/deletes_custom_bench.rs"
+required-features = ["postgres"]
+
+[[test]]
+name = "pg-updates-bench"
+path = "tests/postgres/updates_custom_bench.rs"
+required-features = ["postgres"]
+
+[[test]]
+name = "pg-inserts-bench"
+path = "tests/postgres/inserts_custom_bench.rs"
+required-features = ["postgres"]
+
+[[test]]
+name = "pg-selects-bench"
+path = "tests/postgres/selects_custom_bench.rs"
+required-features = ["postgres"]
 
 #
 # Microsoft SQL Server (MSSQL)

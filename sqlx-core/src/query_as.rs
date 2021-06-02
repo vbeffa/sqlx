@@ -2,9 +2,9 @@ use std::marker::PhantomData;
 
 use either::Either;
 
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 use futures_core::stream::BoxStream;
-#[cfg(feature = "_rt-wasm-bindgen")]
+#[cfg(target_arch = "wasm32")]
 use futures_core::stream::LocalBoxStream as BoxStream;
 
 use futures_util::{StreamExt, TryStreamExt};
@@ -26,7 +26,7 @@ pub struct QueryAs<'q, DB: Database, O, A> {
     pub(crate) output: PhantomData<O>,
 }
 
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 impl<'q, DB, O: Send, A: Send> Execute<'q, DB> for QueryAs<'q, DB, O, A>
 where
     DB: Database,
@@ -53,7 +53,7 @@ where
     }
 }
 
-#[cfg(feature = "_rt-wasm-bindgen")]
+#[cfg(target_arch = "wasm32")]
 impl<'q, DB, O: Send, A> Execute<'q, DB> for QueryAs<'q, DB, O, A>
 where
     DB: Database,
@@ -84,13 +84,13 @@ impl<'q, DB: Database, O> QueryAs<'q, DB, O, <DB as HasArguments<'q>>::Arguments
     /// Bind a value for use with this SQL query.
     ///
     /// See [`Query::bind`](Query::bind).
-    #[cfg(not(feature = "_rt-wasm-bindgen"))]
+    #[cfg(not(target_arch = "wasm32"))]
     pub fn bind<T: 'q + Send + Encode<'q, DB> + Type<DB>>(mut self, value: T) -> Self {
         self.inner = self.inner.bind(value);
         self
     }
 
-    #[cfg(feature = "_rt-wasm-bindgen")]
+    #[cfg(target_arch = "wasm32")]
     pub fn bind<T: 'q + Encode<'q, DB> + Type<DB>>(mut self, value: T) -> Self {
         self.inner = self.inner.bind(value);
         self
@@ -99,7 +99,7 @@ impl<'q, DB: Database, O> QueryAs<'q, DB, O, <DB as HasArguments<'q>>::Arguments
 
 // FIXME: This is very close, nearly 1:1 with `Map`
 // noinspection DuplicatedCode
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 impl<'q, DB, O, A> QueryAs<'q, DB, O, A>
 where
     DB: Database,
@@ -192,7 +192,7 @@ where
     }
 }
 
-#[cfg(feature = "_rt-wasm-bindgen")]
+#[cfg(target_arch = "wasm32")]
 impl<'q, DB, O, A> QueryAs<'q, DB, O, A>
 where
     DB: Database,

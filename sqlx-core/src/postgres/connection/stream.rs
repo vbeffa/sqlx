@@ -8,7 +8,7 @@ use log::Level;
 use crate::error::Error;
 use crate::io::{BufStream, Decode, Encode};
 
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 use crate::net::MaybeTlsStream;
 
 use crate::net::Socket;
@@ -26,9 +26,9 @@ use crate::postgres::{PgConnectOptions, PgDatabaseError, PgSeverity};
 // is fully prepared to receive queries
 
 pub struct PgStream {
-    #[cfg(not(feature = "_rt-wasm-bindgen"))]
+    #[cfg(not(target_arch = "wasm32"))]
     inner: BufStream<MaybeTlsStream<Socket>>,
-    #[cfg(feature = "_rt-wasm-bindgen")]
+    #[cfg(target_arch = "wasm32")]
     inner: BufStream<Socket>,
     // buffer of unreceived notification messages from `PUBLISH`
     // this is set when creating a PgListener and only written to if that listener is
@@ -38,7 +38,7 @@ pub struct PgStream {
 
 impl PgStream {
     pub(super) async fn connect(options: &PgConnectOptions) -> Result<Self, Error> {
-        #[cfg(feature = "_rt-wasm-bindgen")]
+        #[cfg(target_arch = "wasm32")]
         {
             let socket = match options.fetch_socket() {
                 Some(ref path) => Socket::connect_ws(path).await?,
@@ -52,7 +52,7 @@ impl PgStream {
             })
         }
 
-        #[cfg(not(feature = "_rt-wasm-bindgen"))]
+        #[cfg(not(target_arch = "wasm32"))]
         {
             let socket = match options.fetch_socket() {
                 Some(ref path) => Socket::connect_uds(path).await?,
@@ -174,9 +174,9 @@ impl PgStream {
 }
 
 impl Deref for PgStream {
-    #[cfg(not(feature = "_rt-wasm-bindgen"))]
+    #[cfg(not(target_arch = "wasm32"))]
     type Target = BufStream<MaybeTlsStream<Socket>>;
-    #[cfg(feature = "_rt-wasm-bindgen")]
+    #[cfg(target_arch = "wasm32")]
     type Target = BufStream<Socket>;
 
     #[inline]

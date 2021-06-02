@@ -68,7 +68,7 @@ use crate::value::{Value, ValueRef};
 ///
 /// This trait encapsulates a complete set of traits that implement a driver for a
 /// specific database (e.g., MySQL, PostgreSQL).
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 pub trait Database:
     'static
     + Sized
@@ -101,7 +101,7 @@ pub trait Database:
     type Value: Value<Database = Self> + 'static;
 }
 
-#[cfg(feature = "_rt-wasm-bindgen")]
+#[cfg(target_arch = "wasm32")]
 pub trait Database:
     'static
     + Sized

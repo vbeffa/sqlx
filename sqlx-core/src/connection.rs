@@ -2,10 +2,10 @@ use crate::database::{Database, HasStatementCache};
 use crate::error::Error;
 use crate::transaction::Transaction;
 
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 use futures_core::future::BoxFuture;
 
-#[cfg(feature = "_rt-wasm-bindgen")]
+#[cfg(target_arch = "wasm32")]
 use futures_core::future::LocalBoxFuture as BoxFuture;
 
 use log::LevelFilter;
@@ -14,7 +14,7 @@ use std::str::FromStr;
 use std::time::Duration;
 
 /// Represents a single database connection.
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 pub trait Connection: Send {
     type Database: Database;
 
@@ -132,7 +132,7 @@ pub trait Connection: Send {
     }
 }
 
-#[cfg(feature = "_rt-wasm-bindgen")]
+#[cfg(target_arch = "wasm32")]
 pub trait Connection {
     type Database: Database;
 
@@ -276,7 +276,7 @@ impl LogSettings {
     }
 }
 
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 pub trait ConnectOptions: 'static + Send + Sync + FromStr<Err = Error> + Debug {
     type Connection: Connection + ?Sized;
 
@@ -299,7 +299,7 @@ pub trait ConnectOptions: 'static + Send + Sync + FromStr<Err = Error> + Debug {
     }
 }
 
-#[cfg(feature = "_rt-wasm-bindgen")]
+#[cfg(target_arch = "wasm32")]
 pub trait ConnectOptions: 'static + FromStr<Err = Error> + Debug {
     type Connection: Connection + ?Sized;
 

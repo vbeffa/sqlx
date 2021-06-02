@@ -17,7 +17,7 @@ mod database;
 mod derives;
 mod query;
 
-#[cfg(all(feature = "migrate", not(feature = "_rt-wasm-bindgen")))]
+#[cfg(all(feature = "migrate", not(target_arch = "wasm32")))]
 mod migrate;
 
 #[proc_macro]
@@ -74,7 +74,7 @@ pub fn derive_from_row(input: TokenStream) -> TokenStream {
     }
 }
 
-#[cfg(all(feature = "migrate", not(feature = "_rt-wasm-bindgen")))]
+#[cfg(all(feature = "migrate", not(target_arch = "wasm32")))]
 #[proc_macro]
 pub fn migrate(input: TokenStream) -> TokenStream {
     use syn::LitStr;

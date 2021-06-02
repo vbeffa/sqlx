@@ -1,7 +1,7 @@
 use crate::describe::Describe;
 use crate::error::Error;
 use crate::executor::{Execute, Executor};
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 use crate::logger::QueryLogger;
 use crate::postgres::message::{
     self, Bind, Close, CommandComplete, DataRow, MessageFormat, ParameterDescription, Parse, Query,
@@ -15,14 +15,14 @@ use crate::postgres::{
 };
 use either::Either;
 
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 use futures_core::future::BoxFuture;
-#[cfg(feature = "_rt-wasm-bindgen")]
+#[cfg(target_arch = "wasm32")]
 use futures_core::future::LocalBoxFuture as BoxFuture;
 
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 use futures_core::stream::BoxStream;
-#[cfg(feature = "_rt-wasm-bindgen")]
+#[cfg(target_arch = "wasm32")]
 use futures_core::stream::LocalBoxStream as BoxStream;
 
 use futures_core::Stream;
@@ -209,7 +209,7 @@ impl PgConnection {
         persistent: bool,
         metadata_opt: Option<Arc<PgStatementMetadata>>,
     ) -> Result<impl Stream<Item = Result<Either<PgQueryResult, PgRow>, Error>> + 'e, Error> {
-        #[cfg(not(feature = "_rt-wasm-bindgen"))]
+        #[cfg(not(target_arch = "wasm32"))]
         let mut logger = QueryLogger::new(query, self.log_settings.clone());
 
         // before we continue, wait until we are "ready" to accept more queries
@@ -308,7 +308,7 @@ impl PgConnection {
                     }
 
                     MessageFormat::DataRow => {
-                        #[cfg(not(feature = "_rt-wasm-bindgen"))]
+                        #[cfg(not(target_arch = "wasm32"))]
                         logger.increment_rows();
 
                         // one of the set of rows returned by a SELECT, FETCH, etc query

@@ -4,9 +4,9 @@ use std::task::{Context, Poll};
 
 use futures_channel::mpsc;
 
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 use futures_core::future::BoxFuture;
-#[cfg(feature = "_rt-wasm-bindgen")]
+#[cfg(target_arch = "wasm32")]
 use futures_core::future::LocalBoxFuture as BoxFuture;
 
 use futures_core::stream::Stream;
@@ -19,7 +19,7 @@ pub struct TryAsyncStream<'a, T> {
     future: BoxFuture<'a, Result<(), Error>>,
 }
 
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 impl<'a, T> TryAsyncStream<'a, T> {
     pub fn new<F, Fut>(f: F) -> Self
     where
@@ -44,7 +44,7 @@ impl<'a, T> TryAsyncStream<'a, T> {
     }
 }
 
-#[cfg(feature = "_rt-wasm-bindgen")]
+#[cfg(target_arch = "wasm32")]
 impl<'a, T> TryAsyncStream<'a, T> {
     pub fn new<F, Fut>(f: F) -> Self
     where

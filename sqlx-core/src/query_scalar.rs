@@ -1,8 +1,8 @@
 use either::Either;
 
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 use futures_core::stream::BoxStream;
-#[cfg(feature = "_rt-wasm-bindgen")]
+#[cfg(target_arch = "wasm32")]
 use futures_core::stream::LocalBoxStream as BoxStream;
 
 use futures_util::{StreamExt, TryFutureExt, TryStreamExt};
@@ -25,7 +25,7 @@ pub struct QueryScalar<'q, DB: Database, O, A> {
     inner: QueryAs<'q, DB, (O,), A>,
 }
 
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 impl<'q, DB: Database, O: Send, A: Send> Execute<'q, DB> for QueryScalar<'q, DB, O, A>
 where
     A: 'q + IntoArguments<'q, DB>,
@@ -50,7 +50,7 @@ where
     }
 }
 
-#[cfg(feature = "_rt-wasm-bindgen")]
+#[cfg(target_arch = "wasm32")]
 impl<'q, DB: Database, O: Send, A> Execute<'q, DB> for QueryScalar<'q, DB, O, A>
 where
     A: 'q + IntoArguments<'q, DB>,
@@ -79,13 +79,13 @@ impl<'q, DB: Database, O> QueryScalar<'q, DB, O, <DB as HasArguments<'q>>::Argum
     /// Bind a value for use with this SQL query.
     ///
     /// See [`Query::bind`](crate::query::Query::bind).
-    #[cfg(not(feature = "_rt-wasm-bindgen"))]
+    #[cfg(not(target_arch = "wasm32"))]
     pub fn bind<T: 'q + Send + Encode<'q, DB> + Type<DB>>(mut self, value: T) -> Self {
         self.inner = self.inner.bind(value);
         self
     }
 
-    #[cfg(feature = "_rt-wasm-bindgen")]
+    #[cfg(target_arch = "wasm32")]
     pub fn bind<T: 'q + Encode<'q, DB> + Type<DB>>(mut self, value: T) -> Self {
         self.inner = self.inner.bind(value);
         self
@@ -94,7 +94,7 @@ impl<'q, DB: Database, O> QueryScalar<'q, DB, O, <DB as HasArguments<'q>>::Argum
 
 // FIXME: This is very close, nearly 1:1 with `Map`
 // noinspection DuplicatedCode
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 impl<'q, DB, O, A> QueryScalar<'q, DB, O, A>
 where
     DB: Database,
@@ -179,7 +179,7 @@ where
     }
 }
 
-#[cfg(feature = "_rt-wasm-bindgen")]
+#[cfg(target_arch = "wasm32")]
 impl<'q, DB, O, A> QueryScalar<'q, DB, O, A>
 where
     DB: Database,

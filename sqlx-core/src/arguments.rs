@@ -5,7 +5,7 @@ use crate::encode::Encode;
 use crate::types::Type;
 
 /// A tuple of arguments to be sent to the database.
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 pub trait Arguments<'q>: Send + Sized + Default {
     type Database: Database;
 
@@ -19,7 +19,7 @@ pub trait Arguments<'q>: Send + Sized + Default {
         T: 'q + Send + Encode<'q, Self::Database> + Type<Self::Database>;
 }
 
-#[cfg(feature = "_rt-wasm-bindgen")]
+#[cfg(target_arch = "wasm32")]
 pub trait Arguments<'q>: Sized + Default {
     type Database: Database;
 
@@ -33,16 +33,16 @@ pub trait Arguments<'q>: Sized + Default {
         T: 'q + Encode<'q, Self::Database> + Type<Self::Database>;
 }
 
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 pub trait IntoArguments<'q, DB: HasArguments<'q>>: Sized + Send {
     fn into_arguments(self) -> <DB as HasArguments<'q>>::Arguments;
 }
 
-#[cfg(feature = "_rt-wasm-bindgen")]
- pub trait IntoArguments<'q, DB: HasArguments<'q>>: Sized {
-     fn into_arguments(self) -> <DB as HasArguments<'q>>::Arguments;
- }
- 
+#[cfg(target_arch = "wasm32")]
+pub trait IntoArguments<'q, DB: HasArguments<'q>>: Sized {
+    fn into_arguments(self) -> <DB as HasArguments<'q>>::Arguments;
+}
+
 // NOTE: required due to lack of lazy normalization
 #[allow(unused_macros)]
 macro_rules! impl_into_arguments_for_arguments {

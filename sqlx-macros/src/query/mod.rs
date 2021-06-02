@@ -11,7 +11,7 @@ use sqlx_core::connection::Connection;
 use sqlx_core::database::Database;
 use sqlx_core::{column::Column, describe::Describe, type_info::TypeInfo};
 
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 use sqlx_rt::block_on;
 
 use crate::database::DatabaseExt;
@@ -19,7 +19,7 @@ use crate::query::data::QueryData;
 use crate::query::input::RecordType;
 use either::Either;
 
-#[cfg(feature = "_rt-wasm-bindgen")]
+#[cfg(target_arch = "wasm32")]
 use {futures::channel::oneshot, sqlx_rt::spawn};
 
 mod args;
@@ -42,7 +42,7 @@ struct Metadata {
 static METADATA: Lazy<Metadata> = Lazy::new(|| {
     use std::env;
 
-    let manifest_dir = env::var("CARGO_MANIFEST_DIR")
+    let manifest_dir: PathBuf = env::var("CARGO_MANIFEST_DIR")
         .expect("`CARGO_MANIFEST_DIR` must be set")
         .into();
 
@@ -52,7 +52,7 @@ static METADATA: Lazy<Metadata> = Lazy::new(|| {
 
     // If a .env file exists at CARGO_MANIFEST_DIR, load environment variables from this,
     // otherwise fallback to default dotenv behaviour.
-    let env_path = METADATA.manifest_dir.join(".env");
+    let env_path = manifest_dir.join(".env");
     if env_path.exists() {
         let res = dotenv::from_path(&env_path);
         if let Err(e) = res {
@@ -152,7 +152,7 @@ fn expand_from_db(input: QueryMacroInput, db_url: &str) -> crate::Result<TokenSt
 
     let db_url = Url::parse(db_url)?;
     match db_url.scheme() {
-        #[cfg(all(feature = "postgres", not(feature = "_rt-wasm-bindgen")))]
+        #[cfg(all(feature = "postgres", not(target_arch = "wasm32")))]
         "postgres" | "postgresql" => {
             let data = block_on(async {
                 let mut conn = sqlx_core::postgres::PgConnection::connect(db_url.as_str()).await?;
@@ -162,7 +162,7 @@ fn expand_from_db(input: QueryMacroInput, db_url: &str) -> crate::Result<TokenSt
             expand_with_data(input, data, false)
         },
 
-        #[cfg(all(feature = "postgres", feature="_rt-wasm-bindgen"))]
+        #[cfg(all(feature = "postgres", target_arch = "wasm32"))]
         "postgres" | "postgresql" => {
             let (tx, mut rx) = oneshot::channel();
             let src = input.src.clone();

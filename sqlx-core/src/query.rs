@@ -2,9 +2,9 @@ use std::marker::PhantomData;
 
 use either::Either;
 
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 use futures_core::stream::BoxStream;
-#[cfg(feature = "_rt-wasm-bindgen")]
+#[cfg(target_arch = "wasm32")]
 use futures_core::stream::LocalBoxStream as BoxStream;
 
 use futures_util::{future, StreamExt, TryFutureExt, TryStreamExt};
@@ -41,7 +41,7 @@ pub struct Map<'q, DB: Database, F, A> {
     mapper: F,
 }
 
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 impl<'q, DB, A> Execute<'q, DB> for Query<'q, DB, A>
 where
     DB: Database,
@@ -73,7 +73,7 @@ where
     }
 }
 
-#[cfg(feature = "_rt-wasm-bindgen")]
+#[cfg(target_arch = "wasm32")]
 impl<'q, DB, A> Execute<'q, DB> for Query<'q, DB, A>
 where
     DB: Database,
@@ -114,7 +114,7 @@ impl<'q, DB: Database> Query<'q, DB, <DB as HasArguments<'q>>::Arguments> {
     ///
     /// There is no validation that the value is of the type expected by the query. Most SQL
     /// flavors will perform type coercion (Postgres will return a database error).
-    #[cfg(not(feature = "_rt-wasm-bindgen"))]
+    #[cfg(not(target_arch = "wasm32"))]
     pub fn bind<T: 'q + Send + Encode<'q, DB> + Type<DB>>(mut self, value: T) -> Self {
         if let Some(arguments) = &mut self.arguments {
             arguments.add(value);
@@ -123,7 +123,7 @@ impl<'q, DB: Database> Query<'q, DB, <DB as HasArguments<'q>>::Arguments> {
         self
     }
 
-    #[cfg(feature = "_rt-wasm-bindgen")]
+    #[cfg(target_arch = "wasm32")]
     pub fn bind<T: 'q + Encode<'q, DB> + Type<DB>>(mut self, value: T) -> Self {
         if let Some(arguments) = &mut self.arguments {
             arguments.add(value);
@@ -151,7 +151,7 @@ where
     }
 }
 
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 impl<'q, DB, A: Send> Query<'q, DB, A>
 where
     DB: Database,
@@ -276,7 +276,7 @@ where
     }
 }
 
-#[cfg(feature = "_rt-wasm-bindgen")]
+#[cfg(target_arch = "wasm32")]
 impl<'q, DB, A> Query<'q, DB, A>
 where
     DB: Database,
@@ -398,7 +398,7 @@ where
     }
 }
 
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 impl<'q, DB, F: Send, A: Send> Execute<'q, DB> for Map<'q, DB, F, A>
 where
     DB: Database,
@@ -425,7 +425,7 @@ where
     }
 }
 
-#[cfg(feature = "_rt-wasm-bindgen")]
+#[cfg(target_arch = "wasm32")]
 impl<'q, DB, F, A> Execute<'q, DB> for Map<'q, DB, F, A>
 where
     DB: Database,
@@ -452,7 +452,7 @@ where
     }
 }
 
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 impl<'q, DB, F, O, A> Map<'q, DB, F, A>
 where
     DB: Database,
@@ -594,7 +594,7 @@ where
     }
 }
 
-#[cfg(feature = "_rt-wasm-bindgen")]
+#[cfg(target_arch = "wasm32")]
 impl<'q, DB, F, O, A> Map<'q, DB, F, A>
 where
     DB: Database,

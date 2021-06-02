@@ -2,9 +2,9 @@ use crate::connection::ConnectOptions;
 use crate::error::Error;
 use crate::postgres::{PgConnectOptions, PgConnection};
 
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 use futures_core::future::BoxFuture;
-#[cfg(feature = "_rt-wasm-bindgen")]
+#[cfg(target_arch = "wasm32")]
 use futures_core::future::LocalBoxFuture as BoxFuture;
 
 use log::LevelFilter;

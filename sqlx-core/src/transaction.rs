@@ -2,9 +2,9 @@ use std::borrow::Cow;
 use std::fmt::{self, Debug, Formatter};
 use std::ops::{Deref, DerefMut};
 
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 use futures_core::future::BoxFuture;
-#[cfg(feature = "_rt-wasm-bindgen")]
+#[cfg(target_arch = "wasm32")]
 use futures_core::future::LocalBoxFuture as BoxFuture;
 
 use crate::database::Database;
@@ -98,7 +98,7 @@ where
 }
 
 // NOTE: required due to lack of lazy normalization
-#[cfg(not(feature = "_rt-wasm-bindgen"))]
+#[cfg(not(target_arch = "wasm32"))]
 #[allow(unused_macros)]
 macro_rules! impl_executor_for_transaction {
     ($DB:ident, $Row:ident) => {
@@ -169,7 +169,7 @@ macro_rules! impl_executor_for_transaction {
     };
 }
 
-#[cfg(feature = "_rt-wasm-bindgen")]
+#[cfg(target_arch = "wasm32")]
 #[allow(unused_macros)]
 macro_rules! impl_executor_for_transaction {
     ($DB:ident, $Row:ident) => {
