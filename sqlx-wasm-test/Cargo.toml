@@ -9,7 +9,7 @@ crate-type = ["cdylib", "rlib"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-sqlx = { path = "..", features = ["postgres", "decimal", "bigdecimal", "time", "chrono", "bit-vec", "ipnetwork", "uuid", "json"] }
+sqlx = { path = "..", features = ["postgres", "decimal", "bigdecimal", "time", "chrono", "bit-vec", "ipnetwork", "uuid", "json", "runtime-wasm-bindgen"] }
 wasm-bindgen-futures = { version = "^0.3", features = ["futures_0_3"] }
 wasm-bindgen = { version = "0.2.73" }
 ws_stream_wasm = "0.7"

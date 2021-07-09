@@ -32,6 +32,14 @@ runtime-tokio-rustls = [
     "sqlx-rt/runtime-tokio-rustls",
 ]
 
+runtime-wasm-bindgen = [
+    "sqlx/runtime-wasm-bindgen",
+    "sqlx-rt/runtime-wasm-bindgen",
+    "_rt-wasm-bindgen"
+]
+
+_rt-wasm-bindgen = []
+
 postgres = ["sqlx/postgres"]
 
 [dependencies]
@@ -45,3 +53,8 @@ sqlx-rt = { version = "0.5", path = "../sqlx-rt", default-features = false }
 name = "pg_pool"
 harness = false
 required-features = ["postgres"]
+
+[[bench]]
+name = "wasm_querying"
+harness = false
+required-features = ["postgres", "runtime-wasm-bindgen"]
