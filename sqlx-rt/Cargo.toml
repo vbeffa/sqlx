@@ -18,6 +18,7 @@ runtime-async-std-native-tls = [
     "async-native-tls",
 ]
 runtime-tokio-native-tls = ["_rt-tokio", "_tls-native-tls", "tokio-native-tls"]
+runtime-wasm-bindgen = []
 
 runtime-actix-rustls = ["_rt-actix", "_tls-rustls", "tokio-rustls"]
 runtime-async-std-rustls = ["_rt-async-std", "_tls-rustls", "async-rustls"]
