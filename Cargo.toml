@@ -88,10 +88,6 @@ runtime-tokio-native-tls = [
     "sqlx-macros/runtime-tokio-native-tls",
     "_rt-tokio",
 ]
-runtime-wasm-bindgen = [
-    "sqlx-core/_rt-wasm-bindgen",
-    "_rt-wasm-bindgen"
-]
 
 runtime-actix-rustls = [
     "sqlx-core/runtime-actix-rustls",
@@ -113,7 +109,6 @@ runtime-tokio-rustls = [
 _rt-actix = []
 _rt-async-std = []
 _rt-tokio = []
-_rt-wasm-bindgen = []
 
 # database
 any = ["sqlx-core/any"]

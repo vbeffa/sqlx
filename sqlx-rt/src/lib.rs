@@ -9,7 +9,7 @@
 compile_error!(
     "one of the features ['runtime-actix-native-tls', 'runtime-async-std-native-tls', \
      'runtime-tokio-native-tls', 'runtime-actix-rustls', 'runtime-async-std-rustls', \
-     'runtime-tokio-rustls', 'runtime-wasm-bindgen'] must be enabled"
+     'runtime-tokio-rustls'] must be enabled"
 );
 
 #[cfg(any(
@@ -136,11 +136,7 @@ macro_rules! blocking {
 
 #[cfg(all(
     feature = "_rt-async-std",
-    not(any(
-        feature = "_rt-actix",
-        feature = "_rt-tokio",
-        feature = "_rt-wasm-bindgen"
-    )),
+    not(any(feature = "_rt-actix", feature = "_rt-tokio")),
     not(target_arch = "wasm32")
 ))]
 pub use async_std::{

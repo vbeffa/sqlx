@@ -4,11 +4,6 @@ version = "0.1.0"
 edition = "2018"
 publish = false
 
-[features]
-runtime-wasm-bindgen = ["_rt-wasm-bindgen"]
-
-_rt-wasm-bindgen = []
-
 [dependencies]
 sqlx = { default-features = false, path = ".." }
 env_logger = "0.7.1"

@@ -91,7 +91,6 @@ runtime-tokio-rustls = ["sqlx-rt/runtime-tokio-rustls", "_tls-rustls", "_rt-toki
 _rt-actix = ["tokio-stream"]
 _rt-async-std = []
 _rt-tokio = ["tokio-stream"]
-_rt-wasm-bindgen = ["getrandom"]
 _tls-native-tls = []
 _tls-rustls = ["rustls", "webpki", "webpki-roots"]
 

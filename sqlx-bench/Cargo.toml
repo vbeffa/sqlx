@@ -32,14 +32,6 @@ runtime-tokio-rustls = [
     "sqlx-rt/runtime-tokio-rustls",
 ]
 
-runtime-wasm-bindgen = [
-    "sqlx/runtime-wasm-bindgen",
-    "sqlx-rt/runtime-wasm-bindgen",
-    "_rt-wasm-bindgen"
-]
-
-_rt-wasm-bindgen = []
-
 postgres = ["sqlx/postgres"]
 
 [dependencies]
@@ -57,4 +49,4 @@ required-features = ["postgres"]
 [[bench]]
 name = "wasm_querying"
 harness = false
-required-features = ["postgres", "runtime-wasm-bindgen"]
+required-features = ["postgres"]
