@@ -121,7 +121,6 @@ futures-channel = { version = "0.3.5", default-features = false, features = ["si
 futures-core = { version = "0.3.5", default-features = false }
 futures-util = { version = "0.3.5", features = ["sink"] }
 generic-array = { version = "0.14.4", default-features = false, optional = true }
-getrandom = { version = "0.2.2", optional = true, features = ["js"] }
 hex = "0.4.2"
 hmac = { version = "0.10.1", default-features = false, optional = true }
 itoa = "0.4.5"
