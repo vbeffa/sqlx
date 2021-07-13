@@ -50,4 +50,3 @@ test_type!(ipnetwork_vec<Vec<sqlx::types::ipnetwork::IpNetwork>>(Postgres,
            "8.8.8.8/24".parse::<sqlx::types::ipnetwork::IpNetwork>().unwrap()
         ]
 ));
-

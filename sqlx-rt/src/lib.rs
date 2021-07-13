@@ -5,8 +5,7 @@
     feature = "runtime-actix-rustls",
     feature = "runtime-async-std-rustls",
     feature = "runtime-tokio-rustls",
-    )
-))]
+)))]
 compile_error!(
     "one of the features ['runtime-actix-native-tls', 'runtime-async-std-native-tls', \
      'runtime-tokio-native-tls', 'runtime-actix-rustls', 'runtime-async-std-rustls', \
