@@ -65,7 +65,7 @@ pub use sqlx_core::postgres::PgPool;
 
 #[cfg(feature = "postgres")]
 #[cfg_attr(docsrs, doc(cfg(feature = "postgres")))]
-pub use sqlx_core::postgres::{self, PgConnection, PgExecutor, PgPool, Postgres};
+pub use sqlx_core::postgres::{self, PgConnection, PgExecutor, Postgres};
 
 #[cfg(feature = "sqlite")]
 #[cfg_attr(docsrs, doc(cfg(feature = "sqlite")))]

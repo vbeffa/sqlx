@@ -1,13 +1,20 @@
 use crate::error::{Error, Result};
 use crate::ext::async_stream::TryAsyncStream;
+#[cfg(not(target_arch = "wasm32"))]
 use crate::pool::{Pool, PoolConnection};
 use crate::postgres::connection::PgConnection;
 use crate::postgres::message::{
     CommandComplete, CopyData, CopyDone, CopyFail, CopyResponse, MessageFormat, Query,
 };
+#[cfg(not(target_arch = "wasm32"))]
 use crate::postgres::Postgres;
 use bytes::{BufMut, Bytes};
+
+#[cfg(not(target_arch = "wasm32"))]
 use futures_core::stream::BoxStream;
+#[cfg(target_arch = "wasm32")]
+use futures_core::stream::LocalBoxStream as BoxStream;
+
 use smallvec::alloc::borrow::Cow;
 use sqlx_rt::{AsyncRead, AsyncReadExt, AsyncWriteExt};
 use std::convert::TryFrom;
@@ -59,6 +66,7 @@ impl PgConnection {
     }
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 impl Pool<Postgres> {
     /// Issue a `COPY FROM STDIN` statement and begin streaming data to Postgres.
     /// This is a more efficient way to import data into Postgres as compared to
