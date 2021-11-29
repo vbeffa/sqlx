@@ -100,7 +100,7 @@ pub enum Error {
     #[error("attempted to communicate with a crashed background worker")]
     WorkerCrashed,
 
-    #[cfg(feature = "migrate")]
+    #[cfg(all(feature = "migrate", not(target_arch = "wasm32")))]
     #[error("{0}")]
     Migrate(#[source] Box<crate::migrate::MigrateError>),
 }
@@ -237,7 +237,7 @@ where
     }
 }
 
-#[cfg(feature = "migrate")]
+#[cfg(all(feature = "migrate", not(target_arch = "wasm32")))]
 impl From<crate::migrate::MigrateError> for Error {
     #[inline]
     fn from(error: crate::migrate::MigrateError) -> Self {

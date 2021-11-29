@@ -1,7 +1,12 @@
 use crate::connection::ConnectOptions;
 use crate::error::Error;
 use crate::postgres::{PgConnectOptions, PgConnection};
+
+#[cfg(not(target_arch = "wasm32"))]
 use futures_core::future::BoxFuture;
+#[cfg(target_arch = "wasm32")]
+use futures_core::future::LocalBoxFuture as BoxFuture;
+
 use log::LevelFilter;
 use std::time::Duration;
 

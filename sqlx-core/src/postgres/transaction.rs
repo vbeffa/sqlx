@@ -1,4 +1,7 @@
+#[cfg(not(target_arch = "wasm32"))]
 use futures_core::future::BoxFuture;
+#[cfg(target_arch = "wasm32")]
+use futures_core::future::LocalBoxFuture as BoxFuture;
 
 use crate::error::Error;
 use crate::executor::Executor;

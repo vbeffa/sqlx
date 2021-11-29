@@ -45,3 +45,8 @@ sqlx-rt = { version = "0.5", path = "../sqlx-rt", default-features = false }
 name = "pg_pool"
 harness = false
 required-features = ["postgres"]
+
+[[bench]]
+name = "wasm_querying"
+harness = false
+required-features = ["postgres"]

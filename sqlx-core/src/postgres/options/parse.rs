@@ -25,6 +25,11 @@ impl FromStr for PgConnectOptions {
             options = options.port(port);
         }
 
+        #[cfg(target_arch = "wasm32")]
+        {
+            options = options.ws_url();
+        }
+
         let username = url.username();
         if !username.is_empty() {
             options = options.username(
@@ -53,6 +58,7 @@ impl FromStr for PgConnectOptions {
                     options = options.ssl_mode(value.parse().map_err(Error::config)?);
                 }
 
+                #[cfg(not(target_arch = "wasm32"))]
                 "sslrootcert" | "ssl-root-cert" | "ssl-ca" => {
                     options = options.ssl_root_cert(&*value);
                 }

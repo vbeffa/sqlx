@@ -1,0 +1,103 @@
+[package]
+name = "sqlx-wasm-test"
+version = "0.1.0"
+authors = ["abhi"]
+edition = "2018"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+sqlx = { path = "..", features = ["postgres", "decimal", "bigdecimal", "time", "chrono", "bit-vec", "ipnetwork", "uuid", "json"] }
+wasm-bindgen-futures = { version = "^0.3", features = ["futures_0_3"] }
+wasm-bindgen = { version = "0.2.73" }
+ws_stream_wasm = "0.7"
+wasm-bindgen-test = "0.3.0"
+instant = "0.1.9"
+web-sys = { version = "0.3.50", features = ["console", "Performance"] }
+futures = "0.3.14"
+serde = "1.0.117"
+serde_json = { version = "1.0.51", features = ["raw_value"] }
+paste = "1.0.1"
+time = { version = "0.2.26" }
+
+[[test]]
+name = "selects"
+path = "src/selects_bench.rs"
+
+[[test]]
+name = "inserts"
+path = "src/inserts_bench.rs"
+
+[[test]]
+name = "updates"
+path = "src/updates_bench.rs"
+
+[[test]]
+name = "deletes"
+path = "src/deletes_bench.rs"
+
+[[test]]
+name = "pg_wasm_tests"
+path = "src/pg_wasm_tests.rs"
+
+[[test]]
+name = "pg_types_tests"
+path = "src/pg_types_tests.rs"
+
+[[test]]
+name = "pg_types_tests_2"
+path = "src/pg_types_tests_2.rs"
+
+[[test]]
+name = "pg_types_tests_3"
+path = "src/pg_types_tests_3.rs"
+
+[[test]]
+name = "pg_types_tests_4"
+path = "src/pg_types_tests_4.rs"
+
+[[test]]
+name = "pg_types_tests_uuid"
+path = "src/pg_types_tests_uuid.rs"
+
+[[test]]
+name = "pg_types_tests_ipnetwork"
+path = "src/pg_types_tests_ipnetwork.rs"
+
+[[test]]
+name = "pg_types_tests_bitvec"
+path = "src/pg_types_tests_bitvec.rs"
+
+[[test]]
+name = "pg_types_tests_chrono"
+path = "src/pg_types_tests_chrono.rs"
+
+[[test]]
+name = "pg_types_tests_time"
+path = "src/pg_types_tests_time.rs"
+
+[[test]]
+name = "pg_types_tests_json"
+path = "src/pg_types_tests_json.rs"
+
+[[test]]
+name = "pg_types_tests_bigdecimal"
+path = "src/pg_types_tests_bigdecimal.rs"
+
+[[test]]
+name = "pg_types_tests_decimal"
+path = "src/pg_types_tests_decimal.rs"
+
+[[test]]
+name = "pg_types_tests_money"
+path = "src/pg_types_tests_money.rs"
+
+[[test]]
+name = "pg_types_tests_range"
+path = "src/pg_types_tests_range.rs"
+
+[[test]]
+name = "pg_types_tests_interval"
+path = "src/pg_types_tests_interval.rs"

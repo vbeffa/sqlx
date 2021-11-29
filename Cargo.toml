@@ -5,6 +5,7 @@ members = [
     "sqlx-rt",
     "sqlx-macros",
     "sqlx-test",
+    "sqlx-wasm-test",
     "sqlx-cli",
     "sqlx-bench",
     "examples/mysql/todos",
@@ -255,6 +256,26 @@ required-features = ["postgres", "macros"]
 name = "postgres-derives"
 path = "tests/postgres/derives.rs"
 required-features = ["postgres", "macros"]
+
+[[test]]
+name = "pg-deletes-bench"
+path = "tests/postgres/deletes_custom_bench.rs"
+required-features = ["postgres"]
+
+[[test]]
+name = "pg-updates-bench"
+path = "tests/postgres/updates_custom_bench.rs"
+required-features = ["postgres"]
+
+[[test]]
+name = "pg-inserts-bench"
+path = "tests/postgres/inserts_custom_bench.rs"
+required-features = ["postgres"]
+
+[[test]]
+name = "pg-selects-bench"
+path = "tests/postgres/selects_custom_bench.rs"
+required-features = ["postgres"]
 
 #
 # Microsoft SQL Server (MSSQL)

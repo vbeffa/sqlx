@@ -138,6 +138,7 @@ macro_rules! blocking {
 #[cfg(all(
     feature = "_rt-async-std",
     not(any(feature = "_rt-actix", feature = "_rt-tokio")),
+    not(target_arch = "wasm32")
 ))]
 pub use async_std::{
     self, fs, future::timeout, io::prelude::ReadExt as AsyncReadExt,
@@ -194,3 +195,19 @@ pub use async_native_tls::{TlsConnector, TlsStream};
     )),
 ))]
 pub use async_rustls::{client::TlsStream, TlsConnector};
+
+//
+// wasm-bindgen
+//
+#[cfg(target_arch = "wasm32")]
+pub use {
+    async_io_stream::IoStream,
+    futures_util::{
+        io::{AsyncRead, AsyncReadExt, AsyncWrite, AsyncWriteExt},
+        pin_mut,
+        sink::Sink,
+    },
+    wasm_bindgen_futures::futures_0_3::spawn_local as spawn,
+    web_sys::console,
+    ws_stream_wasm::{WsMeta, WsStream, WsStreamIo},
+};

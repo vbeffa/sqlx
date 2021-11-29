@@ -9,7 +9,12 @@ mod copy;
 mod database;
 mod error;
 mod io;
+
+#[cfg(not(target_arch = "wasm32"))]
 mod listener;
+#[cfg(target_arch = "wasm32")]
+mod ws_listener;
+
 mod message;
 mod options;
 mod query_result;
@@ -20,7 +25,7 @@ mod type_info;
 pub mod types;
 mod value;
 
-#[cfg(feature = "migrate")]
+#[cfg(all(feature = "migrate", not(target_arch = "wasm32")))]
 mod migrate;
 
 pub use arguments::{PgArgumentBuffer, PgArguments};
@@ -29,7 +34,12 @@ pub use connection::{PgConnection, PgConnectionInfo};
 pub use copy::PgCopyIn;
 pub use database::Postgres;
 pub use error::{PgDatabaseError, PgErrorPosition};
+
+#[cfg(not(target_arch = "wasm32"))]
 pub use listener::{PgListener, PgNotification};
+#[cfg(target_arch = "wasm32")]
+pub use ws_listener::PgListener;
+
 pub use message::PgSeverity;
 pub use options::{PgConnectOptions, PgSslMode};
 pub use query_result::PgQueryResult;
@@ -40,9 +50,11 @@ pub use type_info::{PgTypeInfo, PgTypeKind};
 pub use value::{PgValue, PgValueFormat, PgValueRef};
 
 /// An alias for [`Pool`][crate::pool::Pool], specialized for Postgres.
+#[cfg(not(target_arch = "wasm32"))]
 pub type PgPool = crate::pool::Pool<Postgres>;
 
 /// An alias for [`PoolOptions`][crate::pool::PoolOptions], specialized for Postgres.
+#[cfg(not(target_arch = "wasm32"))]
 pub type PgPoolOptions = crate::pool::PoolOptions<Postgres>;
 
 /// An alias for [`Executor<'_, Database = Postgres>`][Executor].
@@ -50,8 +62,12 @@ pub trait PgExecutor<'c>: Executor<'c, Database = Postgres> {}
 impl<'c, T: Executor<'c, Database = Postgres>> PgExecutor<'c> for T {}
 
 impl_into_arguments_for_arguments!(PgArguments);
+
+#[cfg(not(target_arch = "wasm32"))]
 impl_executor_for_pool_connection!(Postgres, PgConnection, PgRow);
 impl_executor_for_transaction!(Postgres, PgRow);
+
+#[cfg(not(target_arch = "wasm32"))]
 impl_acquire!(Postgres, PgConnection);
 impl_column_index_for_row!(PgRow);
 impl_column_index_for_statement!(PgStatement);
